@@ -24,6 +24,12 @@ export class RegistrationController {
         return this.RegistrationService.addUser(data);
     };
 
+    @Post(':email')
+    validate(@Param('email') email: string, @Body() data: any){
+        console.log(data.password);
+        return this.RegistrationService.validate(email, data.password);
+    }
+
     @Put(':id')
     updateUser(@Param('id') id: number, @Body() data: any){
         return this.RegistrationService.updateUser(id, data);

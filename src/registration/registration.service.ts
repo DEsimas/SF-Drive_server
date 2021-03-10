@@ -34,6 +34,16 @@ export class RegistrationService {
         return this.users;
     };
 
+    validate(email, password) {
+        const res = this.users.find(value => value.email == email);
+        console.log("authorized", this.formatOutput(res));
+
+        if(res == undefined) return {message: "user not found"};
+
+        if(res.password == password) return {id: res.id};
+        else return {message: "user not found"};
+    }
+
     getById(id: number) {
         const res = this.users.find(value => value.id == id);
         console.log(`\nrequested user\n${this.formatOutput(res)}}`);
