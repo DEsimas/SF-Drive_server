@@ -1,11 +1,19 @@
 import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
 import { inputUserDTO } from "./DTO/inputUser.dto";
 import { userDTO } from "./DTO/user.dto";
+import { userDocument, userSchema } from "./DTO/user.schema";
+import { Model } from "mongoose";
 
 const JSON_STRINGIFY_SPACES: number = 2;
 
 @Injectable()
 export class RegistrationService {
+
+    constructor(@InjectModel('users') private readonly user: Model<userDocument>) {
+
+    };
+
     private users: Array<any> = [{  
         name : "Сухарев Серафим Павлович",
         birth : "2004-10-26",
@@ -29,9 +37,10 @@ export class RegistrationService {
         return JSON.stringify(data, undefined, JSON_STRINGIFY_SPACES);
     }
 
-    getAll() {
+    async getAll() {
         console.log('\nall users requested');
-        return this.users;
+        return this.user.find();
+        // return this.users;
     };
 
     validate(email, password) {
@@ -50,33 +59,39 @@ export class RegistrationService {
         return res;
     };
 
-    addUser(data: inputUserDTO) {
-        const user: userDTO = {
+    async addUser(data: inputUserDTO) {
+        const newUser: userDTO = {
             ...data,
             id: Date.now(),
         };
-        console.log(`\nadded new user\n${this.formatOutput(user)}`);
-        this.users.push(user);
-        return user;
+
+        //some validation
+
+        console.log(`\nadded new user\n${this.formatOutput(newUser)}`);
+
+        const us = new this.user(newUser);
+        return us.save();
+
+        // this.users.push(user);
+        // return user;
     };
 
     updateUser(id: number, data: any){
-        let num = undefined;
-        this.users.map((element, index) => {
-            if(element.id == id) num = index;
-        });
+        // let num = undefined;
+        // this.users.map((element, index) => {
+        //     if(element.id == id) num = index;
+        // });
 
-        if(num === undefined) return {message: "user not found"};
+        // if(num === undefined) return {message: "user not found"};
 
-        Object.keys(data).forEach(key => {
-            this.users[num] = {
-              ...this.users[num],
-              [key]: data[key],
-            }
-        });
+        this.user.findOneAndUpdate({id: id}, {$set:{password: data.password}});
 
-        console.log(`\nuser updated\n${this.formatOutput(this.users[num])}\nwith:\n${this.formatOutput(data)}`);
-        return this.users[num];
+        // Object.keys(data).forEach(key => {
+        //     this.user.findOneAndUpdate({id: id}, {$set:{key: data[key]}});
+        // });
+
+        console.log(`\nuser updated\n${this.formatOutput(this.user.find({id: id}))}\nwith:\n${this.formatOutput(data)}`);
+        // return this.users[num];
     };
 
     removeUser(id: number){
