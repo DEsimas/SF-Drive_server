@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { inputUserDTO } from "./DTO/inputUser.dto";
 import { userDTO } from "./DTO/user.dto";
@@ -11,100 +11,92 @@ const JSON_STRINGIFY_SPACES: number = 2;
 export class RegistrationService {
 
     constructor(@InjectModel('users') private readonly user: Model<userDocument>) {
-
     };
 
-    private users: Array<any> = [{  
-        name : "Сухарев Серафим Павлович",
-        birth : "2004-10-26",
-        email : "simasuh@gmail.com",
-        phone : "+7 977 722 85 82",
-        password : "9876543",
-        passport : {
-            name : "1234 567890",
-            date : "2001-01-01",
-            who : "Министерство наливания молока",
-            code : "123-456"
-        },
-        license : {
-            name : "0987 654321",
-            date : "2012-12-12"
-        },
-        id: 1,
-    }];
-
-    formatOutput(data){
+    formatOutput(data) {
         return JSON.stringify(data, undefined, JSON_STRINGIFY_SPACES);
-    }
+    };
 
     async getAll() {
-        console.log('\nall users requested');
+        console.log('\nAll users requested');
         return this.user.find();
-        // return this.users;
     };
 
-    validate(email, password) {
-        const res = this.users.find(value => value.email == email);
-        console.log("authorized", this.formatOutput(res));
+    async changePassword(email, password) {
+        const user = await this.user.findOne({ email: email });
+        if (user == null) {
+            console.log("\nChange password. User not found.");
+            throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+        } else {
+            await this.user.findOneAndUpdate({ email: email }, { $set: { password: password } });
+            console.log(`\nUser:\n${user}\nPassword changed with: ${password}`);
+            return user;
+        };
+    };
 
-        if(res == undefined) return {message: "user not found"};
+    async getById(id: number) {
+        const user = await this.user.findOne({ id: id });
+        if (user === null) {
+            console.log(`\nRequested user with id ${id}. USER NOT FOUND!`);
+            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        } else {
+            console.log(`\nRequested user\n${this.formatOutput(user)}`);
+            return user;
+        };
+    };
 
-        if(res.password == password) return {id: res.id};
-        else return {message: "user not found"};
-    }
-
-    getById(id: number) {
-        const res = this.users.find(value => value.id == id);
-        console.log(`\nrequested user\n${this.formatOutput(res)}}`);
-        return res;
+    async auth(email: string, password: string) {
+        const user = await this.user.findOne({ email: email });
+        if (user == null) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        else {
+            if (user.password != password) throw new HttpException('Incorrect password', HttpStatus.BAD_REQUEST);
+            else {
+                console.log(`\nAuthorized:\n${this.formatOutput(user)}`);
+                return user;
+            }
+        };
     };
 
     async addUser(data: inputUserDTO) {
-        const newUser: userDTO = {
-            ...data,
-            id: Date.now(),
+        if (await this.user.findOne({ email: data.email }) == null) {
+            const newUser: userDTO = {
+                ...data,
+                id: Date.now(),
+            };
+            console.log(`\nAdded new user\n${this.formatOutput(newUser)}`);
+            const us = new this.user(newUser);
+            return us.save();
+        } else {
+            console.log(`\nUser:\n ${this.formatOutput(data)}\nAlready exists`);
+            throw new HttpException('User aleready exists', HttpStatus.NO_CONTENT);
         };
-
-        //some validation
-
-        console.log(`\nadded new user\n${this.formatOutput(newUser)}`);
-
-        const us = new this.user(newUser);
-        return us.save();
-
-        // this.users.push(user);
-        // return user;
     };
 
-    updateUser(id: number, data: any){
-        // let num = undefined;
-        // this.users.map((element, index) => {
-        //     if(element.id == id) num = index;
-        // });
-
-        // if(num === undefined) return {message: "user not found"};
-
-        this.user.findOneAndUpdate({id: id}, {$set:{password: data.password}});
-
-        // Object.keys(data).forEach(key => {
-        //     this.user.findOneAndUpdate({id: id}, {$set:{key: data[key]}});
-        // });
-
-        console.log(`\nuser updated\n${this.formatOutput(this.user.find({id: id}))}\nwith:\n${this.formatOutput(data)}`);
-        // return this.users[num];
+    async updateUser(id: number, data: any) {
+        if (await this.user.findOne({ id: id }) == null) {
+            console.log("\nUpdate user. User not found.");
+            throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+        } else {
+            const keys = Object.keys(data);
+            for (let key of keys) {
+                const obj = {};
+                obj[key] = data[key];
+                await this.user.findOneAndUpdate({ id: id }, { $set: obj });
+                const user = await this.user.find({ id: id });
+                console.log(`\nuser updated\n${this.formatOutput(user)}\nwith:\n${this.formatOutput(data)}`);
+                return user;
+            };
+        };
     };
 
-    removeUser(id: number){
-        let num = undefined;
-        this.users.map((element, index) => {
-            if(element.id == id) num = index;
-        });
-
-        if(num === undefined) return {message: "user not found"};
-        
-        console.log(`\nuser removed\n${this.formatOutput(this.users[num])}`);
-        this.users[num] = undefined;
-
-        return {message: "success"};
+    async removeUser(id: number) {
+        if (await this.user.findOne({ id: id }) == null) {
+            console.log("\nDelete user. User not found.");
+            throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+        }
+        const user = await this.user.findOne({ id: id });
+        await this.user.deleteOne({ id: id });
+        console.log(`\nDeleted one user\n${this.formatOutput(user)}`);
+        return user;
     }
 };

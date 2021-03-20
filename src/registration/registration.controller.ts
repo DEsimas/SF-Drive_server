@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from "@nestjs/common";
 import { inputUserDTO } from "./DTO/inputUser.dto";
 import { RegistrationService } from "./registration.service";
 
@@ -19,15 +19,22 @@ export class RegistrationController {
         return this.RegistrationService.getById(id);
     };
 
+    @Post('/auth')
+    auth(@Body() data: {email: string, password: string}) {
+        return this.RegistrationService.auth(data.email, data.password);
+    };
+
     @Post()
+    @HttpCode(201)
     addUser(@Body() data: inputUserDTO){
         return this.RegistrationService.addUser(data);
     };
 
     @Post(':email')
-    validate(@Param('email') email: string, @Body() data: any){
+    @HttpCode(201)
+    changePasswrd(@Param('email') email: string, @Body() data: any){
         console.log(data.password);
-        return this.RegistrationService.validate(email, data.password);
+        return this.RegistrationService.changePassword(email, data.password);
     }
 
     @Put(':id')
