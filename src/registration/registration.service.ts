@@ -68,7 +68,7 @@ export class RegistrationService {
             return us.save();
         } else {
             console.log(`\nUser:\n ${this.formatOutput(data)}\nAlready exists`);
-            throw new HttpException('User aleready exists', HttpStatus.NO_CONTENT);
+            throw new HttpException('User aleready exists', HttpStatus.BAD_REQUEST);
         };
     };
 

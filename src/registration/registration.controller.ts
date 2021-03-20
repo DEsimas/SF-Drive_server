@@ -33,7 +33,6 @@ export class RegistrationController {
     @Post(':email')
     @HttpCode(201)
     changePasswrd(@Param('email') email: string, @Body() data: any){
-        console.log(data.password);
         return this.RegistrationService.changePassword(email, data.password);
     }
 
