@@ -1,5 +1,7 @@
 import { ObjectID } from "mongodb";
 import { Column, Entity, ObjectIdColumn } from "typeorm";
+import { Licence } from "./licence.entity";
+import { Passport } from "./passport.entity";
 
 @Entity()
 export class Users {
@@ -10,16 +12,9 @@ export class Users {
         this.email = email;
         this.phone = phone;
         this.password = password;
-        this.license = {
-            name: Lname,
-            date: Ldate,
-        };
-        this.passport = {
-            name: Pname,
-            date: Pdate,
-            who: Pwho,
-            code: Pcode,
-        };
+
+        this.license = new Licence(Lname, Ldate);
+        this.passport = new Passport(Pname, Pdate, Pwho, Pcode);
     }
 
     @ObjectIdColumn()
@@ -40,17 +35,9 @@ export class Users {
     @Column()
     password: string;
 
-    @Column()
-    license: {
-        name: string;
-        date: string;
-    };
+    @Column(() => Licence)
+    license: Licence;
 
-    @Column()
-    passport: {
-        name: string;
-        date: string;
-        who: string;
-        code: string;
-    };
+    @Column(() => Passport)
+    passport: Passport;
 }

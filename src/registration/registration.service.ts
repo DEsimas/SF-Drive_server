@@ -1,9 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { getMongoManager, ObjectIdColumn } from "typeorm";
-import { Users } from "./../entities/user.entity";
+import { Users } from "../entities/users.entity";
 import { ObjectID } from "mongodb";
-import { exception } from "console";
-import e from "express";
 
 const JSON_STRINGIFY_SPACES: number = 2;
 
@@ -48,7 +46,7 @@ export class RegistrationService {
             console.log(`Failed to get user ${id}. Wrong ID`);
             throw new HttpException("Wrong ID", HttpStatus.BAD_REQUEST);
         }
-        const user = await manager.findOne(Users, { _id: new ObjectID(id) });
+        const user = await manager.findOne(Users, { where: { _id: new ObjectID(id) } });
         if(user) {
             console.log(`Got user ${id}`);
             return user;
@@ -104,6 +102,7 @@ export class RegistrationService {
         });
         console.log(`User ${id} updated`);
         console.log(data);
+        await manager.deleteOne(Users, {where: { id: new ObjectID(id)}});
         return await manager.save(user);
     };
 
