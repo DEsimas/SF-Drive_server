@@ -41,7 +41,7 @@ export class RegistrationController {
     };
 
     @Delete(':id')
-    deleteUser(@Param('id') id: number){
+    deleteUser(@Param('id') id: string){
         return this.RegistrationService.removeUser(id);
     };
 };
