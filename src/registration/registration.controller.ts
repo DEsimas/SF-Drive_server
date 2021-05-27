@@ -14,7 +14,7 @@ export class RegistrationController {
     };
 
     @Get(':id')
-    getOne(@Param('id') id: number) {
+    getOne(@Param('id') id: string) {
         return this.RegistrationService.getById(id);
     };
 
@@ -36,7 +36,7 @@ export class RegistrationController {
     }
 
     @Put(':id')
-    updateUser(@Param('id') id: number, @Body() data: any){
+    updateUser(@Param('id') id: string, @Body() data: any){
         return this.RegistrationService.updateUser(id, data);
     };
 

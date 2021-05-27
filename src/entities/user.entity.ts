@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import { ObjectID } from "mongodb";
 import { Column, Entity, ObjectIdColumn } from "typeorm";
 
 @Entity()
@@ -23,7 +23,7 @@ export class Users {
     }
 
     @ObjectIdColumn()
-    _id: ObjectId;
+    _id: ObjectID;
 
     @Column()
     name: string;
