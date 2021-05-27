@@ -2,14 +2,21 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RegistrationModule } from './registration/registration.module';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from "@nestjs/typeorm"
 
 @Module({
   imports: [
     RegistrationModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/test', {
-      autoCreate: true
-    })
+    TypeOrmModule.forRoot({
+      name: "default",
+      type: "mongodb",
+      host: "localhost",
+      port: 27017,
+      database: "SF-DRIVE",
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      entities: [__dirname + '/../**/*.entity.{js, ts}'],
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

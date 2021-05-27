@@ -1,5 +1,4 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from "@nestjs/common";
-import { inputUserDTO } from "./DTO/inputUser.dto";
 import { RegistrationService } from "./registration.service";
 
 @Controller('registration')
@@ -26,7 +25,7 @@ export class RegistrationController {
 
     @Post()
     @HttpCode(201)
-    addUser(@Body() data: inputUserDTO){
+    addUser(@Body() data){
         return this.RegistrationService.addUser(data);
     };
 
