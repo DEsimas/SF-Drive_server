@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
-import { getMongoManager, ObjectIdColumn } from "typeorm";
 import { Users } from "./../entities/user.entity";
 import { ObjectID } from "mongodb";
 import { RegistrationRepository } from "./repositories/registration.repository";
