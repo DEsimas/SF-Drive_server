@@ -15,8 +15,17 @@ export class CarsService {
     async getRecommendations() {
         let recommendations = [];
         const data = await this.CarsRepository.getRecommendations();
+        let ctr = data.length;
         while (recommendations.length != 12) {
-            recommendations.push(data[recommendations.length]);
+            if(!data[recommendations.length]) break;
+            recommendations.push({
+                name: data[recommendations.length].mark + " " + data[recommendations.length].model + ", " + data[recommendations.length].year,
+                price: data[recommendations.length].price,
+                image: data[recommendations.length].image,
+                avatar: data[recommendations.length].avatar,
+                _id: data[recommendations.length]._id
+            });
+            ctr--;
         }
         return recommendations;
     }
