@@ -17,7 +17,7 @@ export class RegistrationRepository {
 
     async saveUser(user: Users) {
         const repository = getMongoRepository(Users);
-        return repository.save(user);
+        return await repository.save(user);
     };
 
     async getAll() {
