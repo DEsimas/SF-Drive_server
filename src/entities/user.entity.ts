@@ -1,8 +1,9 @@
 import { ObjectID } from "mongodb";
 import { Column, Entity, ObjectIdColumn } from "typeorm";
+import { User } from "./graphql";
 
 @Entity()
-export class Users {
+export class Users{
 
     constructor(name: string, birth: string, email: string, phone: string, password: string, Lname:string, Ldate:string, Pname:string, Pdate:string, Pwho:string, Pcode:string) {
         this.name = name;

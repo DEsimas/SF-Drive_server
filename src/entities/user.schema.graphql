@@ -1,0 +1,28 @@
+type User {
+    _id: ID!
+    name: String!
+    birth: String!
+    email: String!
+    phone: String!
+    password: String!
+    license: License!
+    passport: Passport!
+}
+
+type License {
+    name: String!
+    date: String!
+}
+
+type Passport {
+    name: String!
+    date: String!
+    who: String!
+    code: String!
+}
+
+type Query {
+    findAllUsers: [User!]!
+    findOneUser(id: ID!): User
+    authentication(email: String, password: String): User!
+}
