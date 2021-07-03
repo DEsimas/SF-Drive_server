@@ -1,7 +1,4 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
-import { getMongoManager, ObjectIdColumn } from "typeorm";
-import { Users } from "./../entities/user.entity";
-import { ObjectID } from "mongodb";
 import { CarsRepository } from "./repositories/cars.repository";
 
 const JSON_STRINGIFY_SPACES: number = 2;
@@ -28,6 +25,10 @@ export class CarsService {
             ctr--;
         }
         return recommendations;
+    }
+
+    async getFilterByName(name: string) {
+        return await this.CarsRepository.getFilterByName(name);
     }
 
     async addCar(newCar){

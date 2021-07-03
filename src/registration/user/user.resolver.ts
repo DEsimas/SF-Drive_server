@@ -33,4 +33,9 @@ export class UserResolver {
     updateUser(@Args('id') id: string, @Args('updateUserInput') updateUserInput: UpdateUserInput) {
         return this.RegistrationService.updateUser(id, updateUserInput);
     }
+
+    @Mutation()
+    deleteUser(@Args('id') id: string){
+        return this.RegistrationService.removeUser(id);
+    }
 }

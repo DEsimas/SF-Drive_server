@@ -1,0 +1,30 @@
+type Car{
+    _id: ID!
+    mark: String!
+    model: String!
+    year: Int!
+    number: String!
+    VIN: String
+    color: String
+    engineType: String
+    volume: String
+    powerLS: String
+    powerKVT: String
+    transmission: String
+    mileage: String
+    PTS: String
+    STS: String
+    price: Int!
+    price3: Int
+    price5: Int
+    image: String!
+    avatar: String!
+    ownerID: String
+    OSAGO: String
+    KASKO: String
+    name: String!
+}
+
+type Mutation {
+    getFilterByName(name: String!): [Car!]!
+}

@@ -51,6 +51,40 @@ export interface UpdatePassportInput {
     code?: string;
 }
 
+export interface Car {
+    _id: string;
+    mark: string;
+    model: string;
+    year: number;
+    number: string;
+    VIN?: string;
+    color?: string;
+    engineType?: string;
+    volume?: string;
+    powerLS?: string;
+    powerKVT?: string;
+    transmission?: string;
+    mileage?: string;
+    PTS?: string;
+    STS?: string;
+    price: number;
+    price3?: number;
+    price5?: number;
+    image: string;
+    avatar: string;
+    ownerID?: string;
+    OSAGO?: string;
+    KASKO?: string;
+    name: string;
+}
+
+export interface IMutation {
+    getFilterByName(name: string): Car[] | Promise<Car[]>;
+    createUser(createUserInput: CreateUserInput): User | Promise<User>;
+    updateUser(id: string, updateUserInput: UpdateUserInput): User | Promise<User>;
+    deleteUser(id: string): User | Promise<User>;
+}
+
 export interface User {
     _id: string;
     name: string;
@@ -78,9 +112,4 @@ export interface IQuery {
     findAllUsers(): User[] | Promise<User[]>;
     findOneUser(id: string): User | Promise<User>;
     authentication(email: string, password: string): User | Promise<User>;
-}
-
-export interface IMutation {
-    createUser(createUserInput: CreateUserInput): User | Promise<User>;
-    updateUser(id: string, updateUserInput: UpdateUserInput): User | Promise<User>;
 }

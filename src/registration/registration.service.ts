@@ -99,10 +99,16 @@ export class RegistrationService {
             throw new HttpException("Wrong ID", HttpStatus.BAD_REQUEST);
         }
         const _id = new ObjectID(id);
-        if( !await this.RegistrationRepository.exist( { _id: _id} )) {
+        const oldUser = await this.RegistrationRepository.getOne({ _id });
+
+        if( !oldUser) {
             console.log(`Failed to delete user ${_id}`);
             throw new HttpException("User not found", HttpStatus.NOT_FOUND);
         }
-        else return await this.RegistrationRepository.deleteOne( { _id: _id });
+        else{
+            await this.RegistrationRepository.deleteOne( { _id: _id });
+            return oldUser;
+        }
+            
     };
 };

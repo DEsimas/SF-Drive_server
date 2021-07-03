@@ -29,6 +29,7 @@ export class Cars {
         this.ownerID=ownerID;
         this.OSAGO = OSAGO;
         this.KASKO = KASKO;
+        this.name = this.mark + " " + this.model + ", " + this.year;
     }
 
     @ObjectIdColumn()
@@ -99,4 +100,7 @@ export class Cars {
 
     @Column()
     KASKO: string;
+
+    @Column()
+    name: string;
 }
