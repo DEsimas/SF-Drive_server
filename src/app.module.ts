@@ -6,11 +6,13 @@ import { TypeOrmModule } from "@nestjs/typeorm"
 import { CarsModule } from './cars/cars.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
+import { MessagesModule } from './messages/messages.module';
 
 @Module({
   imports: [
     RegistrationModule,
     CarsModule,
+    MessagesModule,
     GraphQLModule.forRoot({
       typePaths: ['./**/*.graphql'],
       definitions: {
