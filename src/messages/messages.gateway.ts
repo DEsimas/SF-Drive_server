@@ -1,5 +1,4 @@
 import { OnGatewayDisconnect, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
-import { message } from 'src/entities/message.entity';
 import { MessagesService } from './messages.service';
 import { Socket } from 'socket.io';
 import { ObjectID } from 'mongodb';
@@ -14,24 +13,20 @@ export class MessagesGateway implements OnGatewayDisconnect {
 
   private users = new Map<ObjectID, Socket>();
 
-  constructor(private readonly MessagesService: MessagesService){
-    this.MessagesService.attachSender = function(message) {
-      console.log(message);
+  constructor(){};
+  
+  //send event to client with correct ID
+  public sendMessageEvent(message) {
+    this.users.forEach((socket, userID) => {
+      if(userID == message.senderID || userID == message.receiverID) socket.emit('message', message)
+    });
+  };
 
-      this.users.forEach(({userID, socket}) => {
-        if(userID == message.senderID || userID == message.receiverID) { 
-          socket.emit('message', message);
-        }
-      })
-    };
-  }
-
+  //if user disconnected remove it from users collection
   handleDisconnect(socket: any) {
-    console.log("UwU");
     this.users.forEach((data, key) => {
       if(socket == data) this.users.delete(key)
     });
-    console.log(this.users);
   };
 
   @SubscribeMessage('auth')
@@ -46,8 +41,6 @@ export class MessagesGateway implements OnGatewayDisconnect {
     });
 
     if(!exist) this.users.set(payload._id, client);
-    
-    console.log(this.users);
 
     return {
       event: 'auth',
