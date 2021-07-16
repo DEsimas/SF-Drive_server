@@ -16,11 +16,26 @@ export class MessagesGateway {
     };
   };
 
-  @SubscribeMessage('new_message')
-  handleMessage(client: any, payload: any) {
-    console.log(payload);
+  private users = [];
+
+  @SubscribeMessage('auth')
+  auth(client: any, payload: any) {
+    if(payload === null) return {event: 'auth', data: { success: false, msg: 'no user in payload' }};
+
+    let exist = false;
+    this.users.map((elem, index) => {
+      if(elem._id == payload._id) {
+        this.users[index] = payload;
+        exist = true;
+      }
+    });
+    
+    if(!exist) this.users.push(payload);
+    
+    console.log(this.users);
+
     return {
-      event: 'new_message',
+      event: 'auth',
       data: {
         success: true
       }
