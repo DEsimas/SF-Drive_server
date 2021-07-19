@@ -20,9 +20,9 @@ export class message {
     content: string;
 
     @Column()
-    senderID: ObjectID;
+    senderID: string;
 
     @Column()
-    receiverID: ObjectID;
+    receiverID: string;
 
 }

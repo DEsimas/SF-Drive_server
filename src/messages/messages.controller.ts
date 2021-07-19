@@ -15,4 +15,9 @@ export class MessagesController {
     save(@Body() data) {
         return this.MessagesService.save(data)
     }
+
+    @Get('myChats')
+    getMyChats(@Body('ids') ids: string[]) {
+        return this.MessagesService.getMyChats(ids);
+    };
 };

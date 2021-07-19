@@ -1,6 +1,5 @@
 import { ObjectID } from "mongodb";
 import { Column, Entity, ObjectIdColumn } from "typeorm";
-import { User } from "./graphql";
 
 @Entity()
 export class Users{
@@ -21,6 +20,8 @@ export class Users{
             who: Pwho,
             code: Pcode,
         };
+        this.chats = [];
+        this.avatar = "https://cdn.discordapp.com/attachments/822098460643033140/862986762615783474/2021-06-28_173127.png"
     }
 
     @ObjectIdColumn()
@@ -54,4 +55,10 @@ export class Users{
         who: string;
         code: string;
     };
+
+    @Column()
+    chats: string[];
+
+    @Column()
+    avatar: string;
 }

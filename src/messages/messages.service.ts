@@ -19,4 +19,8 @@ export class MessagesService {
         this.MessagesGateway.sendMessageEvent(newMessage);
         return await this.MessagesRepository.save(newMessage);
     }
+
+    async getMyChats(ids: string[]) {
+        return await this.MessagesRepository.getMyChats(ids);
+    }
 };
