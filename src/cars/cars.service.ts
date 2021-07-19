@@ -20,7 +20,8 @@ export class CarsService {
                 price: data[recommendations.length].price,
                 image: data[recommendations.length].image,
                 avatar: data[recommendations.length].avatar,
-                _id: data[recommendations.length]._id
+                _id: data[recommendations.length]._id,
+                ownerID: data[recommendations.length].ownerID,
             });
             ctr--;
         }
