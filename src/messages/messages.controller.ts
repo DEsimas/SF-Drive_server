@@ -13,10 +13,10 @@ export class MessagesController {
 
     @Post()
     save(@Body() data) {
-        return this.MessagesService.save(data)
+        return this.MessagesService.save(data);
     }
 
-    @Get('myChats')
+    @Post('myChats')
     getMyChats(@Body('ids') ids: string[]) {
         return this.MessagesService.getMyChats(ids);
     };

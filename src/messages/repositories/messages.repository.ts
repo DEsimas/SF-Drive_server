@@ -35,7 +35,7 @@ export class MessagesRepository {
         const chat = {
             name: user.name,
             avatar: user.avatar,
-            date: msgs[0].date,
+            date: msgs[0] ? msgs[0].date : "none",
             _id: el,
             messages: msgs,
         };
@@ -49,6 +49,8 @@ export class MessagesRepository {
         //name, avatar, date, _id
         //messages[] (only my and his ids)
 
+        console.log('My chats request');
+
         let myChats = [];
         
         for(let i = 0; i < ids.length; i++){
@@ -58,6 +60,7 @@ export class MessagesRepository {
             };
         }
 
+        console.log(myChats);
         return myChats;
     };
 
